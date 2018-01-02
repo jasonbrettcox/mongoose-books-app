@@ -9,6 +9,7 @@
 //require express in our app
 var express = require('express'),
   bodyParser = require('body-parser');
+  models = require('./models');
 
 // generate a new express app and call it 'app'
 var app = express();
@@ -18,6 +19,9 @@ app.use(express.static('public'));
 
 // body parser config to accept our datatypes
 app.use(bodyParser.urlencoded({ extended: true }));
+
+//connect server to database
+var db = require ('./models');
 
 
 
@@ -70,8 +74,10 @@ app.get('/', function (req, res) {
 // get all books
 app.get('/api/books', function (req, res) {
   // send all books as JSON response
-  console.log('books index');
-  res.json(books);
+  db.Book.find(function(err, books){
+    if (err) { return console.log("index error: " + err); }
+    res.json(books);
+  });
 });
 
 // get one book
